@@ -1,0 +1,35 @@
+# Built artifacts
+bin/
+gen/
+out/
+build/
+.gradle/
+*.apk
+*.ap_
+*.dex
+*.class
+
+# IDE - Android Studio
+*.iml
+.idea/
+.idea/caches
+.idea/libraries
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+.idea/modules
+.idea/shelf
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Log files
+*.log
+
+# Android Studio captures folder
+captures/
+
+# OS-specific files
+.DS_Store
+Thumbs.db

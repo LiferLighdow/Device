@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+  <group android:scaleX="0.65"
+      android:scaleY="0.65"
+      android:translateX="18.9"
+      android:translateY="18.9">
+
+      <!-- Balanced Phone Body (Not too thick, not too thin) -->
+      <path
+          android:fillColor="#FFFFFF"
+          android:fillType="evenOdd"
+          android:pathData="
+              M36,10h36c4.4,0 8,3.6 8,8v72c0,4.4 -3.6,8 -8,8h-36c-4.4,0 -8,-3.6 -8,-8v-72c0,-4.4 3.6,-8 8,-8z
+              M34,15h40v78h-40z" />
+
+      <!-- Centered Robot (Pure White) with Balanced Proportions -->
+      <group
+          android:pivotX="54"
+          android:pivotY="54"
+          android:scaleX="0.5"
+          android:scaleY="0.5"
+          android:translateX="0"
+          android:translateY="2">
+
+          <path
+              android:fillColor="#FFFFFF"
+              android:pathData="M38,41h32v24c0,3.3 -2.7,6 -6,6h-20c-3.3,0 -6,-2.7 -6,-6z" />
+
+          <path
+              android:fillColor="#FFFFFF"
+              android:pathData="M30,41c-2.2,0-4,1.8-4,4v18c0,2.2,1.8,4,4,4s4-1.8,4-4v-18c0-2.2-1.8-4-4-4zM78,41c-2.2,0-4,1.8-4,4v18c0,2.2,1.8,4,4,4s4-1.8,4-4v-18c0-2.2-1.8-4-4-4z" />
+
+          <path
+              android:fillColor="#FFFFFF"
+              android:pathData="M44,71c-2.2,0-4,1.8-4,4v8c0,2.2,1.8,4,4,4s4-1.8,4-4v-8c0-2.2-1.8-4-4-4zM64,71c-2.2,0-4,1.8-4,4v8c0,2.2,1.8,4,4,4s4-1.8,4-4v-8c0-2.2-1.8-4-4-4z" />
+
+          <path
+              android:fillColor="#FFFFFF"
+              android:fillType="evenOdd"
+              android:pathData="
+                  M54,21c-8.8,0 -16,7.2 -16,16h32c0,-8.8 -7.2,-16 -16,-16z
+                  M47,31a2.5,2.5 0 1,0 0,5 2.5,2.5 0 0,0 0,-5z
+                  M61,31a2.5,2.5 0 1,0 0,5 2.5,2.5 0 0,0 0,-5z
+                  M41.4,19.2l-3.3,-5.7c-0.4,-0.7 -0.2,-1.5 0.5,-1.9c0.7,-0.4 1.5,-0.2 1.9,0.5l3.3,5.6z
+                  M66.6,19.2l3.3,-5.7c0.4,-0.7 0.2,-1.5 -0.5,-1.9c-0.7,-0.4 -1.5,-0.2 -1.9,0.5l-3.3,5.6z" />
+      </group>
+  </group>
+</vector>

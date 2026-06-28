@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="app/src/main/res/mipmap-xhdpi/ic_launcher.webp" width="96" height="96" alt="Device Icon">
+  <img src="app/src/main/res/mipmap-xxxhdpi/ic_launcher.webp" width="120" height="120" alt="Device Icon">
 </p>
 
 # Device

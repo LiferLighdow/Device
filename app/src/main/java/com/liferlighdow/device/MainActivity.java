@@ -23,6 +23,24 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        View rootLayout = findViewById(R.id.root_layout);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+            rootLayout.setOnApplyWindowInsetsListener((v, insets) -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    v.setPadding(insets.getInsets(android.view.WindowInsets.Type.systemBars()).left,
+                            insets.getInsets(android.view.WindowInsets.Type.systemBars()).top,
+                            insets.getInsets(android.view.WindowInsets.Type.systemBars()).right,
+                            insets.getInsets(android.view.WindowInsets.Type.systemBars()).bottom);
+                } else {
+                    v.setPadding(insets.getSystemWindowInsetLeft(),
+                            insets.getSystemWindowInsetTop(),
+                            insets.getSystemWindowInsetRight(),
+                            insets.getSystemWindowInsetBottom());
+                }
+                return insets;
+            });
+        }
+
         contentFrame = findViewById(R.id.content_frame);
         bottomNav = findViewById(R.id.bottom_nav);
 

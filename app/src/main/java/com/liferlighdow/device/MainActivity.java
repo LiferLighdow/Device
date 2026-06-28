@@ -15,8 +15,11 @@ public class MainActivity extends Activity {
     private LinearLayout bottomNav;
     private HardwareActivity hardwareActivity;
     private ApplicationsActivity appsActivity;
+    private AppDetailActivity appDetailActivity;
     private TemperatureActivity tempActivity;
     private SettingsActivity settingsActivity;
+    private boolean isDetailView = false;
+    private long lastBackPressTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +49,7 @@ public class MainActivity extends Activity {
 
         hardwareActivity = new HardwareActivity(this);
         appsActivity = new ApplicationsActivity(this);
+        appDetailActivity = new AppDetailActivity(this);
         tempActivity = new TemperatureActivity(this);
         settingsActivity = new SettingsActivity(this, new SettingsActivity.OnSettingsChangedListener() {
             @Override
@@ -104,29 +108,54 @@ public class MainActivity extends Activity {
         settingsActivity.refreshUI();
     }
 
-    private void showHardware() {
+    public void showHardware() {
+        isDetailView = false;
         tempActivity.stopUpdates();
         contentFrame.removeAllViews();
         contentFrame.addView(hardwareActivity.getView());
     }
 
-    private void showApps() {
+    public void showApps() {
+        isDetailView = false;
         tempActivity.stopUpdates();
         contentFrame.removeAllViews();
         contentFrame.addView(appsActivity.getView());
     }
 
-    private void showTemp() {
+    public void showAppDetail(ApplicationsActivity.AppEntry app) {
+        isDetailView = true;
+        tempActivity.stopUpdates();
+        contentFrame.removeAllViews();
+        contentFrame.addView(appDetailActivity.getView(app));
+    }
+
+    public void showTemp() {
+        isDetailView = false;
         contentFrame.removeAllViews();
         contentFrame.addView(tempActivity.getView());
         tempActivity.startUpdates();
     }
 
-    private void showSettings() {
+    public void showSettings() {
+        isDetailView = false;
         tempActivity.stopUpdates();
         bottomNav.setVisibility(View.VISIBLE);
         contentFrame.removeAllViews();
         contentFrame.addView(settingsActivity.getView());
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isDetailView) {
+            showApps();
+        } else {
+            if (lastBackPressTime + 2000 > System.currentTimeMillis()) {
+                super.onBackPressed();
+            } else {
+                android.widget.Toast.makeText(this, "Press back again to exit", android.widget.Toast.LENGTH_SHORT).show();
+                lastBackPressTime = System.currentTimeMillis();
+            }
+        }
     }
 
     private int screenTestStep = 0;

@@ -118,18 +118,29 @@ public class TemperatureActivity {
         row.setOrientation(LinearLayout.HORIZONTAL);
         row.setPadding(0, 20, 0, 20);
 
+        boolean isLikelyThreshold = (celsius == 99.0f || celsius == 100.0f || celsius == 105.0f || 
+                                    celsius == 115.0f || celsius == 75.0f || 
+                                    label.toLowerCase().contains("limit") || 
+                                    label.toLowerCase().contains("crit"));
+
         TextView tvLabel = new TextView(context);
-        tvLabel.setText(label);
+        tvLabel.setText(isLikelyThreshold ? label + " (Threshold)" : label);
         tvLabel.setTextColor(ThemeManager.getSecondaryTextColor());
         tvLabel.setTextSize(16);
-        tvLabel.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        tvLabel.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.2f));
 
         TextView tvValue = new TextView(context);
         tvValue.setText(formatTemperature(celsius));
         
-        if (celsius > 45) tvValue.setTextColor(Color.parseColor("#FF5252"));
-        else if (celsius > 35) tvValue.setTextColor(Color.parseColor("#FFAB40"));
-        else tvValue.setTextColor(Color.parseColor("#69F0AE"));
+        if (isLikelyThreshold) {
+            tvValue.setTextColor(Color.parseColor("#90A4AE")); // Greyish for limits
+        } else if (celsius > 45) {
+            tvValue.setTextColor(Color.parseColor("#FF5252")); // Red
+        } else if (celsius > 35) {
+            tvValue.setTextColor(Color.parseColor("#FFAB40")); // Orange
+        } else {
+            tvValue.setTextColor(Color.parseColor("#69F0AE")); // Green
+        }
 
         tvValue.setTextSize(18);
         tvValue.setTypeface(null, Typeface.BOLD);

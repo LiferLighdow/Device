@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.provider.Settings;
 import android.view.Gravity;
 import android.view.View;
@@ -77,7 +78,7 @@ public class ApplicationsActivity {
         menuButton.setLayoutParams(lp);
         menuButton.setClickable(true);
         menuButton.setFocusable(true);
-        menuButton.setBackgroundResource(android.R.drawable.list_selector_background);
+        ThemeManager.setSelectableBackground(menuButton);
         menuButton.setOnClickListener(v -> showSettingsMenu());
         header.addView(menuButton);
 
@@ -94,6 +95,12 @@ public class ApplicationsActivity {
 
         adapter = new AppAdapter();
         listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            if (context instanceof MainActivity) {
+                ((MainActivity) context).showAppDetail(displayList.get(position));
+            }
+        });
 
         listView.setOnItemLongClickListener((parent, view, position, id) -> {
             showAppOptions(displayList.get(position));
@@ -171,7 +178,7 @@ public class ApplicationsActivity {
 
     private void showSettingsMenu() {
         String[] options = { (showSystemApps ? "☑" : "☐") + " Show System Apps", "Sort by Name", "Sort by Size", "Sort by Package", "Sort by Target SDK", "Sort by Min SDK", "Sort by Install Time" };
-        new AlertDialog.Builder(context, ThemeManager.isLightMode(context) ? AlertDialog.THEME_HOLO_LIGHT : AlertDialog.THEME_HOLO_DARK)
+        new AlertDialog.Builder(context)
                 .setTitle("Filter & Sort")
                 .setItems(options, (dialog, which) -> {
                     if (which == 0) showSystemApps = !showSystemApps;
@@ -181,17 +188,46 @@ public class ApplicationsActivity {
     }
 
     private void showAppOptions(AppEntry app) {
-        String[] options = {"App Info", "Extract APK", "Uninstall", "Freeze (Toggle State)"};
-        new AlertDialog.Builder(context, ThemeManager.isLightMode(context) ? AlertDialog.THEME_HOLO_LIGHT : AlertDialog.THEME_HOLO_DARK)
+        String[] options = {"Open App", "App Info", "Share APK", "Extract APK", "Uninstall", "Freeze (Toggle State)"};
+        new AlertDialog.Builder(context)
                 .setTitle(app.name)
                 .setItems(options, (dialog, which) -> {
                     switch (which) {
-                        case 0: openAppInfo(app); break;
-                        case 1: extractApk(app); break;
-                        case 2: uninstallApp(app); break;
-                        case 3: toggleFreeze(app); break;
+                        case 0: openApp(app); break;
+                        case 1: openAppInfo(app); break;
+                        case 2: shareApk(app); break;
+                        case 3: extractApk(app); break;
+                        case 4: uninstallApp(app); break;
+                        case 5: toggleFreeze(app); break;
                     }
                 }).show();
+    }
+
+    private void openApp(AppEntry app) {
+        Intent intent = context.getPackageManager().getLaunchIntentForPackage(app.packageName);
+        if (intent != null) {
+            context.startActivity(intent);
+        } else {
+            Toast.makeText(context, "Cannot open this app", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void shareApk(AppEntry app) {
+        try {
+            File src = new File(app.sourceDir);
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.setType("application/vnd.android.package-archive");
+            
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().build());
+            }
+            
+            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(src));
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            context.startActivity(Intent.createChooser(intent, "Share APK via"));
+        } catch (Exception e) {
+            Toast.makeText(context, "Sharing failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void openAppInfo(AppEntry app) {
@@ -273,12 +309,12 @@ public class ApplicationsActivity {
         }
     }
 
-    private static class AppEntry {
-        String name, packageName, versionName, sourceDir;
-        long versionCode, size, installTime;
-        int targetSdk, minSdk;
-        boolean isSystem;
-        Drawable icon;
+    public static class AppEntry {
+        public String name, packageName, versionName, sourceDir;
+        public long versionCode, size, installTime;
+        public int targetSdk, minSdk;
+        public boolean isSystem;
+        public Drawable icon;
     }
 
     private String formatSize(long size) {

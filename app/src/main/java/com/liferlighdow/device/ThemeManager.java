@@ -3,6 +3,8 @@ package com.liferlighdow.device;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.util.TypedValue;
+import android.view.View;
 
 public class ThemeManager {
     private static final String PREFS_NAME = "device_prefs";
@@ -39,5 +41,11 @@ public class ThemeManager {
 
     public static int getAccentColor() {
         return Color.parseColor("#B2D7FF");
+    }
+
+    public static void setSelectableBackground(View view) {
+        TypedValue outValue = new TypedValue();
+        view.getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+        view.setBackgroundResource(outValue.resourceId);
     }
 }

@@ -158,6 +158,7 @@ public class HardwareActivity {
             tv.setAllCaps(true);
             tv.setClickable(true);
             tv.setFocusable(true);
+            ThemeManager.setSelectableBackground(tv);
             tv.setOnClickListener(v -> showCategory(cat));
             menuContainer.addView(tv);
         }

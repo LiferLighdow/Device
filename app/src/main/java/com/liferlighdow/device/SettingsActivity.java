@@ -65,7 +65,7 @@ public class SettingsActivity {
     private void setupOptions() {
         addOption("Theme", getThemeName(), () -> {
             String[] themes = {"Dark", "Light", "System"};
-            new AlertDialog.Builder(context, ThemeManager.isLightMode(context) ? AlertDialog.THEME_HOLO_LIGHT : AlertDialog.THEME_HOLO_DARK)
+            new AlertDialog.Builder(context)
                     .setTitle("Select Theme")
                     .setItems(themes, (dialog, which) -> {
                         ThemeManager.setThemeMode(context, which);
@@ -76,7 +76,7 @@ public class SettingsActivity {
 
         addOption("Temperature Unit", getUnitName(), () -> {
             String[] units = {"Celsius (°C)", "Fahrenheit (°F)", "Kelvin (K)"};
-            new AlertDialog.Builder(context, ThemeManager.isLightMode(context) ? AlertDialog.THEME_HOLO_LIGHT : AlertDialog.THEME_HOLO_DARK)
+            new AlertDialog.Builder(context)
                     .setTitle("Select Unit")
                     .setItems(units, (dialog, which) -> {
                         setUnitMode(which);
@@ -95,7 +95,7 @@ public class SettingsActivity {
 
         addOption("Quick Test", "Run simple hardware diagnostics", () -> {
             String[] tests = {"Vibration Test", "Flashlight Test", "Screen Pixel Test"};
-            new AlertDialog.Builder(context, ThemeManager.isLightMode(context) ? AlertDialog.THEME_HOLO_LIGHT : AlertDialog.THEME_HOLO_DARK)
+            new AlertDialog.Builder(context)
                     .setTitle("Hardware Quick Test")
                     .setItems(tests, (dialog, which) -> {
                         switch (which) {
@@ -140,7 +140,7 @@ public class SettingsActivity {
         layout.setPadding(0, 30, 0, 30);
         layout.setClickable(true);
         layout.setFocusable(true);
-        layout.setBackgroundResource(android.R.drawable.list_selector_background);
+        ThemeManager.setSelectableBackground(layout);
         layout.setOnClickListener(v -> action.run());
 
         TextView tvTitle = new TextView(context);

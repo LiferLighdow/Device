@@ -33,11 +33,11 @@ jobs:
     - name: Get Version Name
       id: get_version
       run: |
-        VERSION_NAME=$(grep "versionName =" app/build.gradle.kts | sed -E 's/.*"([^"]+)".*/\1/')
+        VERSION_NAME=$(grep "versionName " app/build.gradle | sed -E 's/.*"([^"]+)".*/\1/')
         echo "version=$VERSION_NAME" >> $GITHUB_OUTPUT
 
     - name: Sign Release APK
-      if: github.event_name == 'push' && env.SIGNING_KEY != null
+      if: github.event_name == 'push' && secrets.SIGNING_KEY != null
       uses: r0adkll/sign-android-release@v1
       id: sign_app
       with:
@@ -46,18 +46,12 @@ jobs:
         alias: ${{ secrets.ALIAS }}
         keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
         keyPassword: ${{ secrets.KEY_PASSWORD }}
-      env:
-        SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
 
     - name: Upload Release APK
       uses: actions/upload-artifact@v4
       with:
         name: app-release
-        # 如果簽署成功，上傳簽署後的檔案；否則上傳未簽署的檔案
-        path: |
-          ${{ steps.sign_app.outputs.signedReleaseFile }}
-          app/build/outputs/apk/release/*-unsigned.apk
-          app/build/outputs/apk/release/*.apk
+        path: app/build/outputs/apk/release/*.apk
 
     - name: Create or Update Release
       uses: softprops/action-gh-release@v2
@@ -70,8 +64,6 @@ jobs:
           Last updated: ${{ github.event.head_commit.timestamp }}
           Commit: ${{ github.sha }}
         files: |
-          ${{ steps.sign_app.outputs.signedReleaseFile }}
-          app/build/outputs/apk/release/*-unsigned.apk
           app/build/outputs/apk/release/*.apk
         prerelease: false
       env:

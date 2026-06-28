@@ -38,7 +38,7 @@ jobs:
         echo "version=$VERSION_NAME" >> $GITHUB_OUTPUT
 
     - name: Sign Release APK
-      if: github.event_name == 'push' && secrets.SIGNING_KEY != null
+      if: github.event_name == 'push' && env.HAS_SIGNING_KEY == 'true'
       uses: r0adkll/sign-android-release@v1
       id: sign_app
       with:
@@ -47,6 +47,8 @@ jobs:
         alias: ${{ secrets.ALIAS }}
         keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
         keyPassword: ${{ secrets.KEY_PASSWORD }}
+      env:
+        HAS_SIGNING_KEY: ${{ secrets.SIGNING_KEY != '' }}
 
     - name: Upload Release APK
       uses: actions/upload-artifact@v4
